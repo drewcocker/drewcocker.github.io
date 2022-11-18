@@ -1,0 +1,513 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Highcharts Example</title>
+
+		<style type="text/css">#container {
+            height: 500px;
+          }
+          
+          #controls {
+            margin: 0 auto;
+            text-align: center;
+          }
+          
+          .highcharts-figure,
+          .highcharts-data-table table {
+            min-width: 320px;
+            max-width: 900px;
+            margin: 1em auto;
+          }
+          
+          .highcharts-data-table table {
+            font-family: Verdana, sans-serif;
+            border-collapse: collapse;
+            border: 1px solid #ebebeb;
+            margin: 10px auto;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+          }
+          
+          .highcharts-data-table caption {
+            padding: 1em 0;
+            font-size: 1.2em;
+            color: #555;
+          }
+          
+          .highcharts-data-table th {
+            font-weight: 600;
+            padding: 0.5em;
+          }
+          
+          .highcharts-data-table td,
+          .highcharts-data-table th,
+          .highcharts-data-table caption {
+            padding: 0.5em;
+          }
+          
+          .highcharts-data-table thead tr,
+          .highcharts-data-table tr:nth-child(even) {
+            background: #f8f8f8;
+          }
+          
+          .highcharts-data-table tr:hover {
+            background: #f1f7ff;
+          }</style>
+	</head>
+	<body>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/data.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+        <script src="https://code.highcharts.com/modules/sonification.js"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+
+        <figure class="highcharts-figure">
+            <div id="container"></div>
+            <p class="highcharts-description">
+              This chart demonstrates how you can play charts as sound,
+              enabling large data sets to be visualized without the need
+              for sight. This technique is referred to as Sonification,
+              and has many uses, including increased accessibility for
+              visually impaired users.
+            </p>
+          </figure>
+          
+          <div id="controls" style="">
+            <button id="play">Play</button>
+            <button id="pause">Pause</button>
+            <button id="rewind">Rewind</button>
+            <input type="range" id="speed" name="Speed" min="0.5" max="2" value="1" step="0.05">
+            <label for="speed">Speed</label>
+          </div>
+          
+          <pre id="csv_data" style="display:none">
+            5/7/2022 20:01,-22.26102632
+            5/7/2022 21:01,-22.6288953
+            5/7/2022 22:01,-22.61098775
+            5/7/2022 23:09,-22.32279525
+            5/8/2022 0:01,-22.10415006
+            5/8/2022 1:05,-22.43935948
+            5/8/2022 2:01,-22.44806682
+            5/8/2022 3:05,-22.24562622
+            5/8/2022 4:01,-22.50492336
+            5/8/2022 5:07,-24.72006025
+            5/8/2022 6:03,-27.03300244
+            5/8/2022 7:07,-23.71300585
+            5/8/2022 8:03,-29.21769882
+            5/8/2022 9:07,-24.68636465
+            5/8/2022 10:03,-28.18952538
+            5/8/2022 11:15,-27.25701423
+            5/8/2022 12:03,-28.84745626
+            5/8/2022 13:07,-30.65463893
+            5/8/2022 14:03,-30.94572722
+            5/8/2022 15:07,-30.71077402
+            5/8/2022 16:01,-24.51777287
+            5/8/2022 17:09,-24.67117463
+            5/8/2022 18:01,-24.61888626
+            5/8/2022 19:05,-24.45571665
+            5/8/2022 20:01,-24.39659961
+            5/8/2022 21:09,-24.43854532
+            5/8/2022 22:01,-24.48117258
+            5/8/2022 23:05,-24.24568851
+            5/9/2022 0:01,-24.42604152
+            5/9/2022 1:05,-24.78828757
+            5/9/2022 2:01,-24.46568361
+            5/9/2022 3:05,-23.02037468
+            5/9/2022 4:01,-23.28560622
+            5/9/2022 5:06,-25.09601228
+            5/9/2022 6:02,-27.27239053
+            5/9/2022 7:06,-28.82406194
+            5/9/2022 8:02,-28.34964348
+            5/9/2022 9:22,-28.96303635
+            5/9/2022 10:02,-27.39371606
+            5/9/2022 11:06,-23.22704491
+            5/9/2022 12:02,-20.52950189
+            5/9/2022 13:06,-20.52969509
+            5/9/2022 14:18,-20.97642245
+            5/9/2022 15:06,-20.38967698
+            5/9/2022 16:02,-20.3898472
+            5/9/2022 17:04,-15.98498241
+            5/9/2022 18:00,-17.15923979
+            5/9/2022 19:04,-16.48694491
+            5/9/2022 20:00,-16.4455843
+            5/9/2022 21:04,-16.28686928
+            5/9/2022 22:00,-16.56734645
+            5/9/2022 23:04,-16.02289218
+            5/10/2022 0:00,-15.90875119
+            5/10/2022 1:04,-15.70908567
+            5/10/2022 2:00,-16.28444265
+            5/10/2022 3:04,-15.75428786
+            5/10/2022 4:00,-17.85856325
+            5/10/2022 5:00,-14.72216587
+            5/10/2022 6:00,-27.73215742
+            5/10/2022 7:00,-23.22298532
+            5/10/2022 8:00,-20.82846541
+            5/10/2022 9:04,-19.93092541
+            5/10/2022 10:00,-18.49255029
+            5/10/2022 11:04,-16.18747868
+            5/10/2022 12:00,-19.24545977
+            5/10/2022 13:04,-21.65405486
+            5/10/2022 14:00,-24.03495619
+            5/10/2022 15:04,-21.75213631
+            5/10/2022 16:10,-22.03471451
+            5/10/2022 17:06,-17.14826554
+            5/10/2022 18:02,-17.96111078
+            5/10/2022 19:06,-17.23777817
+            5/10/2022 20:02,-16.59376527
+            5/10/2022 21:06,-16.58751562
+            5/10/2022 22:02,-16.37050503
+            5/10/2022 23:06,-16.35023707
+            5/11/2022 0:10,-22.55903166
+            5/11/2022 1:06,-22.41505907
+            5/11/2022 2:02,-22.73202309
+            5/11/2022 3:06,-21.15568721
+            5/11/2022 4:09,-19.79814664
+            5/11/2022 5:06,-23.1402811
+            5/11/2022 6:02,-26.05660697
+            5/11/2022 7:02,-25.18078601
+            5/11/2022 8:02,-43.82510219
+            5/11/2022 9:06,-44.91646379
+            5/11/2022 10:02,-44.75857139
+            5/11/2022 11:06,-55.99584854
+            5/11/2022 12:02,-56.45716354
+            5/11/2022 13:06,-55.91008511
+            5/11/2022 14:06,-82.07128218
+            5/11/2022 15:06,-101.9379566
+            5/11/2022 16:02,-109.618934
+            5/11/2022 17:06,-124.0550033
+            5/11/2022 18:02,-123.2974053
+            5/11/2022 19:06,-123.2837916
+            5/11/2022 20:02,-123.56132
+            5/11/2022 21:06,-123.6609817
+            5/11/2022 22:02,-123.8509967
+            5/11/2022 23:06,-124.2340547
+            5/12/2022 0:02,-124.5753367
+            5/12/2022 1:14,-124.1828201
+            5/12/2022 2:02,-124.2281616
+            5/12/2022 3:06,-124.0723796
+            5/12/2022 4:02,-121.2932154
+            5/12/2022 5:09,-136.3451607
+            5/12/2022 6:05,-139.6070916
+            5/12/2022 7:05,-140.2998951
+            5/12/2022 8:03,-157.9676509
+            5/12/2022 9:07,-154.9095188
+            5/12/2022 10:03,-155.0417175
+            5/12/2022 11:07,-161.8951154
+            5/12/2022 12:03,-162.8047987
+            5/12/2022 13:07,-167.0576871
+            5/12/2022 14:03,-171.6699056
+            5/12/2022 15:07,-173.7359071
+            5/12/2022 16:01,-179.712874
+            5/12/2022 17:05,-181.070444
+            5/12/2022 18:01,-190.5494125
+            5/12/2022 19:05,-190.446333
+            5/12/2022 20:05,-190.4746363
+            5/12/2022 21:05,-190.6088503
+            5/12/2022 22:01,-190.5579396
+            5/12/2022 23:05,-190.7097679
+            5/13/2022 0:01,-190.8405091
+            5/13/2022 1:05,-190.8131949
+            5/13/2022 2:01,-190.8907924
+            5/13/2022 3:05,-191.0595676
+            5/13/2022 4:01,-203.2127728
+            5/13/2022 5:09,-224.082509
+            5/13/2022 6:09,-233.3366416
+            5/13/2022 7:05,-246.1752878
+            5/13/2022 8:01,-258.4929922
+            5/13/2022 9:13,-262.6522447
+            5/13/2022 10:01,-261.3349969
+            5/13/2022 11:05,-260.1991233
+            5/13/2022 12:01,-261.5039217
+            5/13/2022 13:05,-255.6601368
+            5/13/2022 14:01,-265.537861
+            5/13/2022 15:05,-260.1642273
+            5/13/2022 16:04,-269.8546264
+            5/13/2022 17:04,-274.0504638
+            5/13/2022 18:00,-280.0186278
+            5/13/2022 19:04,-279.8113563
+            5/13/2022 20:00,-279.4444115
+            5/13/2022 21:04,-279.3056994
+            5/13/2022 22:00,-279.6269914
+            5/13/2022 23:04,-279.4059904
+            5/14/2022 0:00,-279.2157641
+            5/14/2022 1:04,-279.5048966
+            5/14/2022 2:00,-279.5036104
+            5/14/2022 3:04,-303.6755185
+            5/14/2022 4:00,-307.3269926
+            5/14/2022 5:07,-328.2862702
+            5/14/2022 6:11,-345.3101778
+            5/14/2022 7:07,-343.2404478
+            5/14/2022 8:03,-377.7479057
+            5/14/2022 9:23,-378.0888547
+            5/14/2022 10:11,-406.5581277
+            5/14/2022 11:31,-407.0617335
+            5/14/2022 12:11,-412.3624415
+            5/14/2022 13:07,-427.1647959
+            5/14/2022 14:03,-451.0792054
+            5/14/2022 15:07,-465.8504857
+            5/14/2022 16:02,-464.0790089
+            5/14/2022 17:02,-505.9258161
+            5/14/2022 18:02,-510.9997973
+            5/14/2022 19:06,-510.5465296
+            5/14/2022 20:02,-510.6194044
+            5/14/2022 21:06,-510.6405845
+            5/14/2022 22:02,-510.6648776
+            5/14/2022 23:06,-510.3357753
+            5/15/2022 0:02,-510.2496897
+            5/15/2022 1:06,-510.4236934
+            5/15/2022 2:02,-510.3004188
+            5/15/2022 3:06,-510.2706383
+            5/15/2022 4:06,-513.5317666
+            5/15/2022 5:04,-533.42135
+            5/15/2022 6:04,-551.5689015
+            5/15/2022 7:04,-571.2765447
+            5/15/2022 8:00,-609.1295709
+            5/15/2022 9:04,-632.9225189
+            5/15/2022 10:00,-628.4272999
+            5/15/2022 11:04,-630.0608043
+            5/15/2022 12:00,-630.2717485
+            5/15/2022 13:04,-653.2208045
+            5/15/2022 14:00,-661.4126817
+            5/15/2022 15:04,-694.9264498
+            5/15/2022 16:00,-694.2332139
+            5/15/2022 17:06,-694.9050077
+            5/15/2022 18:06,-693.4199261
+            5/15/2022 19:06,-694.0150856
+            5/15/2022 20:06,-694.0810729
+            5/15/2022 21:06,-693.8569092
+            5/15/2022 22:02,-693.6886385
+            5/15/2022 23:06,-693.8605968
+            5/16/2022 0:02,-694.0438884
+            5/16/2022 1:06,-693.9710589
+            5/16/2022 2:02,-693.9258647
+            5/16/2022 3:06,-702.7748577
+            5/16/2022 4:01,-705.4830469
+            5/16/2022 5:05,-737.9246417
+            5/16/2022 6:01,-768.7840456
+            5/16/2022 7:09,-768.4613995
+            5/16/2022 8:01,-805.4719466
+            5/16/2022 9:05,-823.6309715
+            5/16/2022 10:05,-838.4326438
+            5/16/2022 11:05,-841.0925808
+            5/16/2022 12:01,-878.6318687
+            5/16/2022 13:05,-921.1326859
+            5/16/2022 14:05,-948.5940117
+            5/16/2022 15:05,-967.4601037
+            5/16/2022 16:02,-991.9600605
+            5/16/2022 17:06,-992.9107692
+            5/16/2022 18:10,-992.6673112
+            5/16/2022 19:06,-992.2968508
+            5/16/2022 20:14,-992.3127708
+            5/16/2022 21:06,-992.2141494
+            5/16/2022 22:06,-992.1343342
+            5/16/2022 23:18,-992.2191843
+            5/17/2022 0:02,-992.2417345
+            5/17/2022 1:06,-992.153507
+            5/17/2022 2:02,-992.0804437
+            5/17/2022 3:06,-994.2815901
+            5/17/2022 4:02,-1021.600853
+            5/17/2022 5:04,-1053.503587
+            5/17/2022 6:00,-1093.292761
+            5/17/2022 7:04,-1116.935643
+            5/17/2022 8:00,-1139.814467
+            5/17/2022 9:06,-1162.31141
+            5/17/2022 10:02,-1165.782353
+          </pre>
+
+
+
+		<script type="text/javascript">// Sonification options
+            var sdInstruments = [{
+                instrument: 'sineMajor',
+                instrumentMapping: {
+                  duration: 200,
+                  frequency: 'y',
+                  volume: 0.7,
+                  pan: -1
+                },
+                instrumentOptions: {
+                  minFrequency: 150,
+                  maxFrequency: 1500
+                }
+              }],
+              nyInstruments = [{
+                instrument: 'triangleMajor',
+                instrumentMapping: {
+                  duration: 200,
+                  frequency: 'y',
+                  volume: 0.6,
+                  pan: 1
+                },
+                instrumentOptions: {
+                  minFrequency: 150,
+                  maxFrequency: 1500
+                }
+              }];
+            
+            // Point of interest options
+            var poiTime = Date.UTC(2022, 5, 16),
+              poiEarcon = {
+                // Define the earcon we want to play for the point of interest
+                earcon: new Highcharts.sonification.Earcon({
+                  instruments: [{
+                    instrument: 'squareMajor',
+                    playOptions: {
+                      // Play a quick rising frequency
+                      frequency: function (time) {
+                        return time * 1760 + 440;
+                      },
+                      volume: 0.1,
+                      duration: 200
+                    }
+                  }]
+                }),
+                // Play this earcon if we hit the point of interest
+                condition: function (point) {
+                  return point.x === poiTime;
+                }
+              };
+            
+            // Create the chart
+            var chart = Highcharts.chart('container', {
+              chart: {
+                type: 'spline'
+              },
+              title: {
+                text: 'Play chart as sound'
+              },
+              subtitle: {
+                text: 'Cumulative variance'
+              },
+              yAxis: {
+                title: {
+                  text: 'Litres'
+                }
+              },
+              xAxis: {
+                type: 'datetime',
+                plotLines: [{
+                  value: poiTime,
+                  dashStyle: 'dash',
+                  width: 1,
+                  color: '#d33'
+                }]
+              },
+              tooltip: {
+                split: true,
+                valueDecimals: 0,
+                valueSuffix: 'L'
+              },
+              plotOptions: {
+                series: {
+                  marker: {
+                    enabled: false
+                  },
+                  cursor: 'pointer',
+                  // Sonify points on click
+                  point: {
+                    events: {
+                      click: function () {
+                        // Sonify all points at this x value
+                        var targetX = this.x,
+                          chart = this.series.chart;
+                        chart.series.forEach(function (series) {
+                          // Map instruments to the options for this series
+                          var instruments = series.options.id === 'sd' ?
+                            sdInstruments : nyInstruments;
+                          // See if we have a point with the targetX
+                          series.points.some(function (point) {
+                            if (point.x === targetX) {
+                              point.sonify({
+                                instruments: instruments
+                              });
+                              return true;
+                            }
+                            return false;
+                          });
+                        });
+                      }
+                    }
+                  }
+                }
+              },
+              // Data source: https://www.ncdc.noaa.gov
+              data: {
+                csv: document.getElementById('csv_data').innerHTML,
+                firstRowAsNames: false,
+                parsed: function (columns) {
+                //   columns.splice(1, 2); // Remove columns
+                }
+              },
+              series: [{
+                name: 'CV',
+                id: 'sd',
+                color: '#f4b042'
+              }]
+            });
+            
+            
+            // Utility function that highlights a point
+            function highlightPoint(event, point) {
+              var chart = point.series.chart,
+                hasVisibleSeries = chart.series.some(function (series) {
+                  return series.visible;
+                });
+              if (!point.isNull && hasVisibleSeries) {
+                point.onMouseOver(); // Show the hover marker and tooltip
+              } else {
+                if (chart.tooltip) {
+                  chart.tooltip.hide(0);
+                }
+              }
+            }
+            
+            
+            // On speed change we reset the sonification
+            document.getElementById('speed').onchange = function () {
+              chart.cancelSonify();
+            };
+            
+            
+            // Add sonification button handlers
+            document.getElementById('play').onclick = function () {
+              if (!chart.sonification.timeline || chart.sonification.timeline.atStart()) {
+                chart.sonify({
+                  duration: 5000 / document.getElementById('speed').value,
+                  order: 'simultaneous',
+                  pointPlayTime: 'x',
+                  seriesOptions: [{
+                    id: 'sd',
+                    instruments: sdInstruments,
+                    onPointStart: highlightPoint,
+                    // Play earcon at point of interest
+                    earcons: [poiEarcon]
+                  }, {
+                    id: 'ny',
+                    instruments: nyInstruments,
+                    onPointStart: highlightPoint
+                  }],
+                  // Delete timeline on end
+                  onEnd: function () {
+                    if (chart.sonification.timeline) {
+                      delete chart.sonification.timeline;
+                    }
+                  }
+                });
+              } else {
+                chart.resumeSonify();
+              }
+            };
+            document.getElementById('pause').onclick = function () {
+              chart.pauseSonify();
+            };
+            document.getElementById('rewind').onclick = function () {
+              chart.rewindSonify();
+            };
+		</script>
+	</body>
+</html>
